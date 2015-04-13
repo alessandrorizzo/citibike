@@ -119,15 +119,17 @@ end
 
 %evaluate instantaneous conditions 
 
+clear title xlabel ylabel
+
 low=min(min(statactivity));
 [xm,ym] = find(statactivity==low);
 for k=1:length(xm)
     figure;
     plot(statactivity(xm,:));
-    v=['Station ',num2str(stationids(xm(k))),' risked to be empty at time ',num2str(ym(k))]; 
-    title(v);
     xlabel('Time (Delta T = 10 min)'); 
     ylabel('Bike count from T=0'); 
+    v=['Station ',num2str(stationids(xm(k))),' risked to be empty at time ',num2str(ym(k))]; 
+    title(v);
     display(v);
 end
 
@@ -137,10 +139,10 @@ high=max(max(statactivity));
 for k=1:length(xM)
     figure;
     plot(statactivity(xM(k),:));
-    v=['Station ',num2str(stationids(xM(k))),' risked to be empty at time ',num2str(yM(k))]; 
-    title(v);
     xlabel('Time (Delta T = 10 min)'); 
     ylabel('Bike count from T=0'); 
+    v=['Station ',num2str(stationids(xM(k))),' risked to be empty at time ',num2str(yM(k))]; 
+    title(v);
     display(v);
 end
 
@@ -173,13 +175,13 @@ for i=1:length(stationids)
     if ~(isempty(yM))
         figure;
         plot(statactivitydiff(i,:));
+        xlabel=('Time (Delta T = 10 min)'); 
+        ylabel=('Docked/Undocked bikes per hour'); 
         hold on; 
         plot(M(i)*ones(1,length(statactivitydiff)),'r'); 
         hold off
         v=['More than ',num2str(M(i)),' bikes per hour have been docked at station ',num2str(stationids(i))]; 
         title(v);
-        xlabel=('Time (Delta T = 10 min)'); 
-        ylabel=('Docked/Undocked bikes per hour'); 
         stationfullvec=[stationfullvec ; i];
         stationfulltime=[stationfulltime ; yM(1)]; 
     end
@@ -189,13 +191,13 @@ for i=1:length(stationids)
     if ~(isempty(ym))
         figure;
         plot(statactivitydiff(i,:));
+        xlabel=('Time (Delta T = 10 min)'); 
+        ylabel=('Docked/Undocked bikes per hour');
         hold on; 
         plot(-M(i)*ones(1,length(statactivitydiff)),'r'); 
         hold off
         v=['More than ',num2str(M(i)),' bikes per hour have been undocked at station ',num2str(stationids(i))]; 
-        title(v);
-        xlabel=('Time (Delta T = 10 min)'); 
-        ylabel=('Docked/Undocked bikes per hour'); 
+        title(v); 
         stationemptyvec=[stationemptyvec ; i]; 
         stationemptytime=[stationemptytime ; ym(1)];
     end  
@@ -217,7 +219,6 @@ end
  % I pick the first ten closest stations that tend to be empty at the alarm
  % time
  
- display('one')
 
      for i=1:length(stationfullvec)
          j=1; 
@@ -231,23 +232,20 @@ end
          end
      end
 
-display('two')
      
  for i=1:length(stationfullvec)
      figure;
      plot(stationids(candidate(i,:)),statactivitydiff(candidate(i,:),stationfulltime(i)),'*');
-     v=['Candidate Rebalancer for Station ',num2str(stationids(stationfullvec(i))),' - Send bikes to the stations in graph'];
-     clear title xlabel ylabel
-     title(v);
      xlabel('Station ID');
      ylabel('Docked bikes per hour');
+     v=['Candidate Rebalancer for Station ',num2str(stationids(stationfullvec(i))),' - Send bikes to the stations in graph'];
+     title(v);
  end
  
  % candidate rebalancer for stations that risk to be empty
  % I pick the first ten closest stations that tend to be full at the alarm
  % time
  
- display('three')
  
 for i=1:length(stationemptyvec)
          j=1; 
@@ -261,16 +259,14 @@ for i=1:length(stationemptyvec)
          end
 end
 
-display('four')
 
  for i=1:length(stationemptyvec)
      figure;
      plot(stationids(candidate(i,:)),statactivitydiff(candidate(i,:),stationemptytime(i)),'*');
-     v=['Candidate Rebalancer for Station ',num2str(stationids(i)),' - Recall bikes from the stations in graph'];
-     clear title xlabel ylabel
-     title(v);
      xlabel('Station ID');
      ylabel('Docked bikes per hour');
+     v=['Candidate Rebalancer for Station ',num2str(stationids(i)),' - Recall bikes from the stations in graph'];
+     title(v);
  end 
  
  
